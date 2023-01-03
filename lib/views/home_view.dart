@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:music_app/utils/functions.dart';
+import 'package:music_app/views/favourites_view.dart';
+// import 'package:music_app/views/albums_view.dart';
+// import 'package:music_app/views/artists_view.dart';
+// import 'package:music_app/views/favourites_view.dart';
+// import 'package:music_app/views/folders_view.dart';
+// import 'package:music_app/views/playlists_view.dart';
+// import 'package:music_app/views/tracks_view.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
   @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  MusicFunctions functions = MusicFunctions();
+  List<String> musicFolders = [
+    "Favourites",
+    "Playlists",
+    "Tracks",
+    "Albums",
+    "Artists",
+    "Folders"
+  ];
+  late int selected = 0;
+  late String item = "Favourites";
+  @override
   Widget build(BuildContext context) {
-    List<String> item = [
-      "Favourites",
-      "Playlists",
-      "Tracks",
-      "Albums",
-      "Artisits",
-      "Folders"
-    ];
-    double size;
     return Scaffold(
       body: Container(
         color: Colors.black,
@@ -47,17 +62,25 @@ class HomeView extends StatelessWidget {
               height: 50,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: item.length,
-                  itemBuilder: (context, index) => InkWell(
-                        onTap: () {},
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 10),
+                  itemCount: musicFolders.length,
+                  itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 10),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              selected = index;
+                              item = musicFolders[index];
+                            });
+                          },
                           child: Text(
-                            item[index],
+                            musicFolders[index],
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 14,
+                              fontSize: selected == index ? 18 : 14,
+                              fontWeight: selected == index
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
                             ),
                           ),
                         ),
@@ -72,13 +95,14 @@ class HomeView extends StatelessWidget {
                     borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20))),
-                child: Column(
-                  children: [
-                    Text("where are you"),
-                  ],
-                ),
+                child: functions.view(item),
+                // Column(
+                //   children: [
+                //     Text("where are you"),
+                //   ],
+                // ),
               ),
-            ),
+            )
           ],
         ),
       ),
